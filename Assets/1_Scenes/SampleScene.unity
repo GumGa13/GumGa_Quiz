@@ -277,6 +277,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: AnswerButton (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 5310319029418792864, guid: c34d63bf6b0314f42b096c473b489606, type: 3}
+      propertyPath: m_Text
+      value: "\uCCAD\uCD98\uC758 \uAFC8\uACFC \uD76C\uB9DD\n"
+      objectReference: {fileID: 0}
+    - target: {fileID: 5310319029418792864, guid: c34d63bf6b0314f42b096c473b489606, type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5310319029418792864, guid: c34d63bf6b0314f42b096c473b489606, type: 3}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5310319029418792864, guid: c34d63bf6b0314f42b096c473b489606, type: 3}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5310319029418792864, guid: c34d63bf6b0314f42b096c473b489606, type: 3}
+      propertyPath: m_FontData.m_Font
+      value: 
+      objectReference: {fileID: 12800000, guid: 78dc74b846cd7cb4f9432e9f3ba17db0, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -598,8 +618,28 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4954118735232151861, guid: c34d63bf6b0314f42b096c473b489606, type: 3}
       propertyPath: m_Name
-      value: AnswerButton
+      value: AnswerButton (0)
       objectReference: {fileID: 0}
+    - target: {fileID: 5310319029418792864, guid: c34d63bf6b0314f42b096c473b489606, type: 3}
+      propertyPath: m_Text
+      value: "\uC0B0\uC545\uC6A9 \uBC27\uC904\n"
+      objectReference: {fileID: 0}
+    - target: {fileID: 5310319029418792864, guid: c34d63bf6b0314f42b096c473b489606, type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5310319029418792864, guid: c34d63bf6b0314f42b096c473b489606, type: 3}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5310319029418792864, guid: c34d63bf6b0314f42b096c473b489606, type: 3}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5310319029418792864, guid: c34d63bf6b0314f42b096c473b489606, type: 3}
+      propertyPath: m_FontData.m_Font
+      value: 
+      objectReference: {fileID: 12800000, guid: 78dc74b846cd7cb4f9432e9f3ba17db0, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -654,7 +694,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 992637053}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -784,6 +824,7 @@ GameObject:
   - component: {fileID: 1355955494}
   - component: {fileID: 1355955493}
   - component: {fileID: 1355955492}
+  - component: {fileID: 1355955496}
   m_Layer: 5
   m_Name: QuizCanvas
   m_TagString: Untagged
@@ -875,6 +916,21 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1355955496
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1355955491}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 843a47ce28977844f961244ae55e6461, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  questionText: {fileID: 0}
+  question: {fileID: 0}
+  answerTextArr: []
 --- !u!1 &1533852244
 GameObject:
   m_ObjectHideFlags: 0
@@ -1070,6 +1126,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: AnswerButton (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 5310319029418792864, guid: c34d63bf6b0314f42b096c473b489606, type: 3}
+      propertyPath: m_Text
+      value: "\uB108\uB97C \uD5A5\uD55C \uB098\uC758 \uB9C8\uC74C\n"
+      objectReference: {fileID: 0}
+    - target: {fileID: 5310319029418792864, guid: c34d63bf6b0314f42b096c473b489606, type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5310319029418792864, guid: c34d63bf6b0314f42b096c473b489606, type: 3}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5310319029418792864, guid: c34d63bf6b0314f42b096c473b489606, type: 3}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5310319029418792864, guid: c34d63bf6b0314f42b096c473b489606, type: 3}
+      propertyPath: m_FontData.m_Font
+      value: 
+      objectReference: {fileID: 12800000, guid: 78dc74b846cd7cb4f9432e9f3ba17db0, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1564,6 +1640,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: AnswerButton (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 5310319029418792864, guid: c34d63bf6b0314f42b096c473b489606, type: 3}
+      propertyPath: m_Text
+      value: "\uAC1C\uB531\uB531\uD55C \uC218\uC785\uC0B0 \uC824\uB9AC\n"
+      objectReference: {fileID: 0}
+    - target: {fileID: 5310319029418792864, guid: c34d63bf6b0314f42b096c473b489606, type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5310319029418792864, guid: c34d63bf6b0314f42b096c473b489606, type: 3}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5310319029418792864, guid: c34d63bf6b0314f42b096c473b489606, type: 3}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5310319029418792864, guid: c34d63bf6b0314f42b096c473b489606, type: 3}
+      propertyPath: m_FontData.m_Font
+      value: 
+      objectReference: {fileID: 12800000, guid: 78dc74b846cd7cb4f9432e9f3ba17db0, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
