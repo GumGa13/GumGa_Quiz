@@ -185,6 +185,11 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!1 &296892745 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4954118735232151861, guid: c34d63bf6b0314f42b096c473b489606, type: 3}
+  m_PrefabInstance: {fileID: 2051082194}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &387892718
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -312,6 +317,10 @@ PrefabInstance:
     - target: {fileID: 5175985583653456074, guid: c34d63bf6b0314f42b096c473b489606, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: Quiz, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5175985583653456074, guid: c34d63bf6b0314f42b096c473b489606, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5175985583653456074, guid: c34d63bf6b0314f42b096c473b489606, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
@@ -730,6 +739,11 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 898202355016602174, guid: c34d63bf6b0314f42b096c473b489606, type: 3}
   m_PrefabInstance: {fileID: 830648136}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &958103926 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4954118735232151861, guid: c34d63bf6b0314f42b096c473b489606, type: 3}
+  m_PrefabInstance: {fileID: 387892718}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &992637053
 GameObject:
   m_ObjectHideFlags: 0
@@ -1010,7 +1024,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questionText: {fileID: 1960296567}
   question: {fileID: 11400000, guid: ebacb59dc25f0b54e89ddc9af9ac4066, type: 2}
-  answerButtons: []
+  answerButtons:
+  - {fileID: 2092207473}
+  - {fileID: 296892745}
+  - {fileID: 1714295507}
+  - {fileID: 958103926}
   defaultAnswerSprite: {fileID: -2421234149185767044, guid: 67ae2c3728bcc0e4a8e443011ca9f81f, type: 3}
   correctAnswerSprite: {fileID: -4659264650518790821, guid: bacce5d87c747e34488d6f9b43fc98f4, type: 3}
 --- !u!1 &1533852244
@@ -1245,6 +1263,10 @@ PrefabInstance:
       value: Quiz, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 5175985583653456074, guid: c34d63bf6b0314f42b096c473b489606, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5175985583653456074, guid: c34d63bf6b0314f42b096c473b489606, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
@@ -1353,6 +1375,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1649865711}
   m_CullTransparentMesh: 1
+--- !u!1 &1714295507 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4954118735232151861, guid: c34d63bf6b0314f42b096c473b489606, type: 3}
+  m_PrefabInstance: {fileID: 1620494595}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1849044959
 GameObject:
   m_ObjectHideFlags: 0
@@ -1799,6 +1826,10 @@ PrefabInstance:
       value: Quiz, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 5175985583653456074, guid: c34d63bf6b0314f42b096c473b489606, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5175985583653456074, guid: c34d63bf6b0314f42b096c473b489606, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
@@ -1968,6 +1999,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2078048148}
   m_CullTransparentMesh: 1
+--- !u!1 &2092207473 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4954118735232151861, guid: c34d63bf6b0314f42b096c473b489606, type: 3}
+  m_PrefabInstance: {fileID: 830648136}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
