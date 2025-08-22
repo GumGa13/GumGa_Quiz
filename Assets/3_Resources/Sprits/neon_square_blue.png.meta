@@ -116,9 +116,9 @@ TextureImporter:
       name: neon_square_blue_0
       rect:
         serializedVersion: 2
-        x: 18
+        x: 16
         y: 16
-        width: 986
+        width: 990
         height: 990
       alignment: 0
       pivot: {x: 0.5, y: 0.5}

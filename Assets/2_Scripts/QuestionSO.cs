@@ -5,7 +5,7 @@ using UnityEngine;
 public class QuestionSO : ScriptableObject
 {
     [TextArea(2, 6)]
-    [SerializeField] string question = "Q. 세상에서 가장 끈질긴 것은?";
+    [SerializeField] string question = "여기에 질문을 웩웩";
     [SerializeField] string[] answers = new string[4];
     [SerializeField] int correctAnswerIndex = 0;
 
