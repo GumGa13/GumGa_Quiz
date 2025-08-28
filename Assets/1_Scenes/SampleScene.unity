@@ -235,9 +235,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b54519f0b34989458376ebcf88e9805, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  problemTime: 10
+  problemTime: 5
   solutionTime: 3
+  isProblemTime: 1
   fillAmount: 0
+  loadNextQuestion: 0
 --- !u!114 &120356864
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1163,6 +1165,9 @@ MonoBehaviour:
   - {fileID: 958103926}
   defaultAnswerSprite: {fileID: -2421234149185767044, guid: 67ae2c3728bcc0e4a8e443011ca9f81f, type: 3}
   correctAnswerSprite: {fileID: -4659264650518790821, guid: bacce5d87c747e34488d6f9b43fc98f4, type: 3}
+  timerImage: {fileID: 120356864}
+  problemTimerSprite: {fileID: -5384725055999689231, guid: fa541680389d96745b7c575b43d76a81, type: 3}
+  solutionTimerSprite: {fileID: 801340330791846111, guid: 5f63d8d4e170b564190a5b1363f4f67f, type: 3}
 --- !u!1 &1533852244
 GameObject:
   m_ObjectHideFlags: 0

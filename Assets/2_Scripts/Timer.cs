@@ -6,12 +6,14 @@ public class Timer : MonoBehaviour
     [SerializeField] float solutionTime = 3f;
     float time = 0f;
 
-    [HideInInspector] bool isProblemTime = true;
+    [HideInInspector] public bool isProblemTime = true;
     [HideInInspector] public float fillAmount;
+    [HideInInspector] public bool loadNextQuestion;
 
     private void Start()
     {
         time = problemTime;
+        loadNextQuestion = true;
     }
 
     private void Update()
@@ -47,9 +49,15 @@ public class Timer : MonoBehaviour
             {
                 isProblemTime = true;
                 time = problemTime;
+                loadNextQuestion = true;
             }
-            Debug.Log("Time Over");
+            Debug.Log("Timer over");
         }
+    }
+
+    public void CancleTimer()
+    {
+        time = 0f;
     }
 
 }
