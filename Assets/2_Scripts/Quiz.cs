@@ -27,9 +27,14 @@ public class Quiz : MonoBehaviour
     Timer timer;
     bool chooseAnswer = false;
 
+    [Header("점수")]
+    [SerializeField] TextMeshProUGUI scoreText;
+    ScoreKeeper scoreKeeper;
+
     private void Start()
     {
         timer = FindFirstObjectByType<Timer>();
+        scoreKeeper = FindFirstObjectByType<ScoreKeeper>();
         GetNextQuestion();  
     }
 
@@ -72,6 +77,7 @@ public class Quiz : MonoBehaviour
         SetDefaultButtonSprites();
         GetRandomQuestion();
         OnDisplayQuestion();
+        scoreKeeper.IncrementQuestionsSeen();
     }
 
     private void GetRandomQuestion()
@@ -106,6 +112,8 @@ public class Quiz : MonoBehaviour
         chooseAnswer = true;
         DisplaySolution(index);
         timer.CancleTimer();
+        SetButtonState(false);
+        scoreText.text = $"Score : {scoreKeeper.CalculateScore()}";
     }
 
     private void DisplaySolution(int index)
@@ -114,6 +122,7 @@ public class Quiz : MonoBehaviour
         {
             questionText.text = "수입산 하리보만큼 끈질긴 것은 없습니다.";
             answerButtons[index].GetComponent<Image>().sprite = correctAnswerSprite;
+            scoreKeeper.IncrementCorrectAnswers();
         }
         else
         {
