@@ -6,14 +6,14 @@ public class Timer : MonoBehaviour
     [SerializeField] float solutionTime = 3f;
     float time = 0f;
 
-    [HideInInspector] public bool isProblemTime = true;
+    [HideInInspector] public bool isProblemTime;
     [HideInInspector] public float fillAmount;
     [HideInInspector] public bool loadNextQuestion;
 
     private void Start()
     {
+        isProblemTime = true;
         time = problemTime;
-        loadNextQuestion = true;
     }
 
     private void Update()

@@ -1,4 +1,6 @@
+using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,7 +9,8 @@ public class Quiz : MonoBehaviour
 {
     [Header("질문")]
     [SerializeField] TextMeshProUGUI questionText;
-    [SerializeField] QuestionSO question;
+    [SerializeField] List<QuestionSO> questions = new List<QuestionSO>();
+    QuestionSO currentQeustion;
     //[SerializeField] TextMeshProUGUI[] answerTextArr;
 
     [Header("보기")]
@@ -50,7 +53,7 @@ public class Quiz : MonoBehaviour
         }
 
         // 제한시간이 끝났는데도 답을 고르지 않았을 때
-        if (!timer.isProblemTime == false && !chooseAnswer == false)
+        if (timer.isProblemTime == false && chooseAnswer == false)
         {
             DisplaySolution(-1);
         }
@@ -58,10 +61,24 @@ public class Quiz : MonoBehaviour
 
     private void GetNextQuestion()
     {
+        if (questions.Count <= 0)
+        {
+            Debug.Log("더 이상 질문이 없습니다.");
+            return;
+        }
+
         chooseAnswer = false;
         SetButtonState(true);
         SetDefaultButtonSprites();
+        GetRandomQuestion();
         OnDisplayQuestion();
+    }
+
+    private void GetRandomQuestion()
+    {
+        int RandomIndex = UnityEngine.Random.Range(0, questions.Count);
+        currentQeustion = questions[RandomIndex];
+        questions.RemoveAt(RandomIndex);
     }
 
     private void SetDefaultButtonSprites()
@@ -74,13 +91,13 @@ public class Quiz : MonoBehaviour
 
     private void OnDisplayQuestion()
     {
-        Debug.Log("Displaying question: " + question.GetQuestion());
-        questionText.text = question.GetQuestion();
+        Debug.Log("Displaying question: " + currentQeustion.GetQuestion());
+        questionText.text = currentQeustion.GetQuestion();
 
         for (int i = 0; i < answerButtons.Length; i++)
         {
             //answerTextArr[i].text = question.GetAnswers(i);
-            answerButtons[i].GetComponentInChildren<TextMeshProUGUI>().text = question.GetAnswers(i);
+            answerButtons[i].GetComponentInChildren<TextMeshProUGUI>().text = currentQeustion.GetAnswers(i);
         }
     }
 
@@ -93,7 +110,7 @@ public class Quiz : MonoBehaviour
 
     private void DisplaySolution(int index)
     {
-        if (index == question.GetCorrectAnswerIndex())
+        if (index == currentQeustion.GetCorrectAnswerIndex())
         {
             questionText.text = "수입산 하리보만큼 끈질긴 것은 없습니다.";
             answerButtons[index].GetComponent<Image>().sprite = correctAnswerSprite;
