@@ -31,14 +31,20 @@ public class Quiz : MonoBehaviour
     [SerializeField] TextMeshProUGUI scoreText;
     ScoreKeeper scoreKeeper;
 
+    [Header("Progress Bar")]
+    [SerializeField] Slider progressBar;
+    public bool isComplete;
+
     private void Start()
     {
         timer = FindFirstObjectByType<Timer>();
         scoreKeeper = FindFirstObjectByType<ScoreKeeper>();
-        GetNextQuestion();  
+        progressBar.maxValue = questions.Count;
+        progressBar.value = 0;
+        GetNextQuestion();
     }
 
-     private void Update()
+    private void Update()
     {
         if (timer.isProblemTime)
         {
@@ -78,6 +84,7 @@ public class Quiz : MonoBehaviour
         GetRandomQuestion();
         OnDisplayQuestion();
         scoreKeeper.IncrementQuestionsSeen();
+        progressBar.value++;
     }
 
     private void GetRandomQuestion()
@@ -113,20 +120,20 @@ public class Quiz : MonoBehaviour
         DisplaySolution(index);
         timer.CancleTimer();
         SetButtonState(false);
-        scoreText.text = $"Score : {scoreKeeper.CalculateScore()}";
+        scoreText.text = $"Score : {scoreKeeper.CalculateScore()}%";
     }
 
     private void DisplaySolution(int index)
     {
         if (index == currentQeustion.GetCorrectAnswerIndex())
         {
-            questionText.text = "¼öÀÔ»ê ÇÏ¸®º¸¸¸Å­ ²öÁú±ä °ÍÀº ¾ø½À´Ï´Ù.";
+            questionText.text = "¹¹Áö¤»¤» ¾îÄÉ ¸ÂÇûÁö¤»¤»";
             answerButtons[index].GetComponent<Image>().sprite = correctAnswerSprite;
             scoreKeeper.IncrementCorrectAnswers();
         }
         else
         {
-            questionText.text = "¿ì¸ÅÇÑ °Í.";
+            questionText.text = "¶¯¶¯¶¯!! »©¾×!";
         }
         SetButtonState(false);
     }

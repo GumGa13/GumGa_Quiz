@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 57c520adef01cda49a0db034487cc48b, type: 3}
-  m_Name: Question_0
+  m_Name: Question_5
   m_EditorClassIdentifier: 
-  question: "Q. \uC138\uC0C1\uC5D0\uC11C \uAC00\uC7A5 \uB048\uC9C8\uAE34 \uAC83\uC740?"
+  question: "Q. \uC774\uC724\uC138\uC758 \uC9C1\uACC4 \uC871\uC18D \uAC00\uBB38 \uC778\uBB3C\uC740?"
   answers:
-  - "\uC0B0\uC545\uC6A9 \uBC27\uC904"
-  - "\uC724\uC138\uC758 \uBA58\uD0C8"
-  - "\uAC1C\uB531\uB531\uD55C \uC218\uC785\uC0B0 \uC824\uB9AC"
-  - "\uCCAD\uCD98\uC758 \uAFC8\uACFC \uD76C\uB9DD"
-  correctAnswerIndex: 1
+  - "\uC774\uBB38\uC138"
+  - "\uC774\uC131\uACC4"
+  - "\uC774\uC218\uADFC"
+  - "\uC774\uAD11\uC218"
+  correctAnswerIndex: 0
