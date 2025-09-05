@@ -59,8 +59,15 @@ public class Quiz : MonoBehaviour
         // 다음 질문 불러오기
         if (timer.loadNextQuestion)
         {
-            timer.loadNextQuestion = false;
-            GetNextQuestion();
+            if (questions.Count <= 0)
+            {
+                GameManager.Instance.ShowEndScene();
+            }
+            else
+            {
+                timer.loadNextQuestion = false;
+                GetNextQuestion();
+            }
         }
 
         // 제한시간이 끝났는데도 답을 고르지 않았을 때

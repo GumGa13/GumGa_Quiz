@@ -7,22 +7,21 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
 
     [SerializeField] private Quiz quiz;
-    [SerializeField] private EndScript endScript;
+    [SerializeField] private EndScreen endScript;
 
-    void Awake()
+    private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
         }
-        else if (Instance != this)
+        else 
         {
             Destroy(gameObject);
         }
     }
 
-    void Start()
+    private void Start()
     {
         ShowQuizScene();
     }
@@ -33,7 +32,7 @@ public class GameManager : MonoBehaviour
         endScript.gameObject.SetActive(false);
     }
 
-    private void ShowEndScene()
+    public void ShowEndScene()
     {
         quiz.gameObject.SetActive(false);
         endScript.gameObject.SetActive(true);
