@@ -33,15 +33,70 @@ public class Quiz : MonoBehaviour
 
     [Header("Progress Bar")]
     [SerializeField] Slider progressBar;
-    public bool isComplete;
 
-    private void Start()
+    [Header("ChatGPTClient")]
+    [SerializeField] ChatGPTClient chatGPTClient;
+    [SerializeField] int questionCount = 3;
+
+    bool isGeneratingQuestions = false;
+
+    void Start()
     {
         timer = FindFirstObjectByType<Timer>();
         scoreKeeper = FindFirstObjectByType<ScoreKeeper>();
+        chatGPTClient.quizGenerateHandler += QuizGeneratedHandler;
+
+        if (questions.Count == 0)
+        {
+            GenerateQuestionsifNeeded();
+        }
+        else
+        {
+            InitializeProgressBar();
+        }
+    }
+
+    private void GenerateQuestionsifNeeded()
+    {
+        if (isGeneratingQuestions) return;
+
+        isGeneratingQuestions = true;
+        GameManager.Instance.ShowLoadingScene();
+
+        string topicToUse = GetTrendingTopic();
+        chatGPTClient.GenerateQuestions(questionCount, topicToUse);
+        Debug.Log($"GenerateQuestionsifNeeded: {topicToUse}");
+    }
+
+    private string GetTrendingTopic()
+    {
+        string[] topics = new string[]
+        {
+            "과학",
+            "역사",
+            "음악",
+            "영화",
+            "스포츠",
+            "기술",
+            "문학",
+            "예술",
+            "지리",
+            "음식"
+        };
+        int randomindex = UnityEngine.Random.Range(0, topics.Length);
+        return topics[randomindex];
+    }
+
+    void QuizGeneratedHandler(List<QuestionSO> questions)
+    {
+        //questions = questions;
+        Debug.Log($"QuizGeneratedHandler: {questions.Count} questions received.");
+    }
+
+    private void InitializeProgressBar()
+    {
         progressBar.maxValue = questions.Count;
         progressBar.value = 0;
-        GetNextQuestion();
     }
 
     private void Update()
@@ -59,9 +114,9 @@ public class Quiz : MonoBehaviour
         // 다음 질문 불러오기
         if (timer.loadNextQuestion)
         {
-            if (questions.Count <= 0)
+            if (questions.Count == 0)
             {
-                GameManager.Instance.ShowEndScene();
+                GenerateQuestionsifNeeded();
             }
             else
             {
@@ -79,12 +134,13 @@ public class Quiz : MonoBehaviour
 
     private void GetNextQuestion()
     {
-        if (questions.Count <= 0)
+        if (questions.Count == 0)
         {
             Debug.Log("더 이상 질문이 없습니다.");
             return;
         }
 
+        GameManager.Instance.ShowQuizScene();
         chooseAnswer = false;
         SetButtonState(true);
         SetDefaultButtonSprites();

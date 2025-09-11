@@ -8,28 +8,30 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private Quiz quiz;
     [SerializeField] private EndScreen endScript;
+    [SerializeField] private GameObject LoadingCanvas;
 
-    private void Awake()
+    void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
         }
-        else 
+        else if (Instance != this)
         {
             Destroy(gameObject);
         }
     }
 
-    private void Start()
+    void Start()
     {
-        ShowQuizScene();
+        //ShowQuizScene();
     }
 
-    private void ShowQuizScene()
+    public void ShowQuizScene()
     {
         quiz.gameObject.SetActive(true);
         endScript.gameObject.SetActive(false);
+        LoadingCanvas.SetActive(false);
     }
 
     public void ShowEndScene()
@@ -37,6 +39,14 @@ public class GameManager : MonoBehaviour
         quiz.gameObject.SetActive(false);
         endScript.gameObject.SetActive(true);
         endScript.ShowFinalScore();
+        LoadingCanvas.SetActive(false);
+    }
+
+    public void ShowLoadingScene()
+    {
+        quiz.gameObject.SetActive(false);
+        endScript.gameObject.SetActive(false);
+        LoadingCanvas.SetActive(true);
     }
 
     public void OnReplayLevel1()

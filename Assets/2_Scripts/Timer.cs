@@ -12,8 +12,8 @@ public class Timer : MonoBehaviour
 
     private void Start()
     {
-        isProblemTime = true;
         time = problemTime;
+        loadNextQuestion = true;
     }
 
     private void Update()
