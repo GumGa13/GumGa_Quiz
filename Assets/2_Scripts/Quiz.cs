@@ -91,6 +91,7 @@ public class Quiz : MonoBehaviour
     {
         //questions = questions;
         Debug.Log($"QuizGeneratedHandler: {questions.Count} questions received.");
+        isGeneratingQuestions = false;
     }
 
     private void InitializeProgressBar()

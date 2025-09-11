@@ -13,13 +13,29 @@ public class ChatGPTClient : MonoBehaviour
     {
         Debug.Log($"Generating {questionCount} questions on the topic {topicToUse}");
 
-        StartCoroutine((IEnumerator)GenerateWithDelay());
+        StartCoroutine(GenerateWithDelay());
     }
 
-    private IEnumerable GenerateWithDelay()
+    private IEnumerator GenerateWithDelay()
     {
         yield return new WaitForSeconds(3f);
-        quizGenerateHandler?.Invoke(new List<QuestionSO>());
+        List<QuestionSO> questions = new List<QuestionSO>();
+        QuestionSO so1 = CreateQuestion("ChatGPT 생성질문1", new string[] { "답변1(정답)", "답변2", "답변3", "답변4" }, 0);
+        questions.Add(so1);
+        QuestionSO so2 = CreateQuestion("ChatGPT 생성질문1", new string[] { "답변1", "답변2(정답)", "답변3", "답변4" }, 1);
+        questions.Add(so2);
+        QuestionSO so3 = CreateQuestion("ChatGPT 생성질문1", new string[] { "답변1", "답변2", "답변3(정답)", "답변4" }, 2);
+        questions.Add(so3);
+
+        quizGenerateHandler.Invoke(new List<QuestionSO>());
         Debug.Log("Finished generating questions.");
+    }
+
+    QuestionSO CreateQuestion(string q, string[] a, int correctIndex)
+    {
+        QuestionSO SO = ScriptableObject.CreateInstance<QuestionSO>();
+        SO.SetData(q, a, correctIndex);
+
+        return SO;
     }
 }
