@@ -2070,6 +2070,7 @@ MonoBehaviour:
   progressBar: {fileID: 1718924271}
   chatGPTClient: {fileID: 1524240306}
   questionCount: 3
+  loadingText: {fileID: 1834613881}
 --- !u!1001 &1425546815
 PrefabInstance:
   m_ObjectHideFlags: 0

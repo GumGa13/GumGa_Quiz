@@ -27,7 +27,7 @@ public class ChatGPTClient : MonoBehaviour
         QuestionSO so3 = CreateQuestion("ChatGPT 생성질문1", new string[] { "답변1", "답변2", "답변3(정답)", "답변4" }, 2);
         questions.Add(so3);
 
-        quizGenerateHandler.Invoke(new List<QuestionSO>());
+        quizGenerateHandler?.Invoke(questions);
         Debug.Log("Finished generating questions.");
     }
 
