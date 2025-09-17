@@ -65,7 +65,7 @@ public class Quiz : MonoBehaviour
         GameManager.Instance.ShowLoadingScene();
 
         string topicToUse = GetTrendingTopic();
-        chatGPTClient.GenerateQuestions(questionCount, topicToUse);
+        chatGPTClient.GenerateQuizQuestions(questionCount, topicToUse);
         Debug.Log($"GenerateQuestionsifNeeded: {topicToUse}");
     }
 
