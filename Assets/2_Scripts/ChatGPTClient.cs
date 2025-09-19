@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using Unity.Burst.CompilerServices;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -59,6 +58,7 @@ public class ChatGPTClient : MonoBehaviour
     private void Awake()
     {
         apiKey = LoadFromResources();
+        Debug.Log("Loaded API Key from Resources: " + apiKey);
     }
 
     private string LoadFromResources()
@@ -71,9 +71,9 @@ public class ChatGPTClient : MonoBehaviour
                 string[] lines = configFile.text.Split('\n');
                 foreach (string line in lines)
                 {
-                    if (line.StartsWith("OpenAI_API_Key="))
+                    if (line.StartsWith("OPENAI_API_KEY="))
                     {
-                        return line.Substring("OpenAI_API_Key=".Length).Trim();
+                        return line.Substring("OPENAI_API_KEY=".Length).Trim();
                     }
                 }
             }
