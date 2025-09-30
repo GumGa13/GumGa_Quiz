@@ -68,12 +68,14 @@ public class ChatGPTClient : MonoBehaviour
             TextAsset configFile = Resources.Load<TextAsset>("config");
             if (configFile != null)
             {
-                string[] lines = configFile.text.Split('\n');
+                // 다양한 줄바꿈(\r\n, \n, \r) 모두 처리
+                string[] lines = configFile.text.Split(new[] { "\r\n", "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (string line in lines)
                 {
-                    if (line.StartsWith("OPENAI_API_KEY="))
+                    var trimmedLine = line.Trim();
+                    if (trimmedLine.StartsWith("OPENAI_API_KEY="))
                     {
-                        return line.Substring("OPENAI_API_KEY=".Length).Trim();
+                        return trimmedLine.Substring("OPENAI_API_KEY=".Length).Trim();
                     }
                 }
             }
