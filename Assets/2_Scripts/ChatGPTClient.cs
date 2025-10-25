@@ -1,3 +1,4 @@
+// Assets/2_Scripts/ChatGPTClient.cs
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -5,47 +6,12 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
 
-[Serializable]
-public class ChatGPTRequest
-{
-    public string model = "gpt-4.1-nano";
-    public Message[] messages;
-    public float temperature = 1.1f;
-    public int max_completion_tokens = 4000;
-}
-
-[Serializable]
-public class Message
-{
-    public string role;
-    public string content;
-}
-
-[Serializable]
-public class ChatGPTResponse
-{
-    public Choice[] choices;
-}
-
-[Serializable]
-public class Choice
-{
-    public Message message;
-}
-
-[Serializable]
-public class QuizData
-{
-    public QuizQuestion[] questions;
-}
-
-[Serializable]
-public class QuizQuestion
-{
-    public string question;
-    public string[] answers;
-    public int correctAnswerIndex;
-}
+[Serializable] public class ChatGPTRequest { public string model = "gpt-4.1-nano"; public Message[] messages; public float temperature = 1.0f; public int max_completion_tokens = 800; }
+[Serializable] public class Message { public string role; public string content; }
+[Serializable] public class ChatGPTResponse { public Choice[] choices; }
+[Serializable] public class Choice { public Message message; }
+[Serializable] public class QuizData { public QuizQuestion[] questions; }
+[Serializable] public class QuizQuestion { public string question; public string[] answers; public int correctAnswerIndex; }
 
 public class ChatGPTClient : MonoBehaviour
 {
@@ -55,36 +21,31 @@ public class ChatGPTClient : MonoBehaviour
     public delegate void QuizGenerateHandler(List<QuestionSO> questions);
     public event QuizGenerateHandler quizGenerateHandler;
 
-    private void Awake()
+    public event Action<bool> quizRequestFinished; // true=성공, false=실패
+
+    void Awake()
     {
         apiKey = LoadFromResources();
-        Debug.Log("Loaded API Key from Resources: " + apiKey);
+        if (string.IsNullOrWhiteSpace(apiKey))
+            Debug.LogWarning("OpenAI API Key 가 비어있음. Assets/Resources/config 에 'OPENAI_API_KEY=...' 추가.");
     }
 
-    private string LoadFromResources()
+    string LoadFromResources()
     {
         try
         {
-            TextAsset configFile = Resources.Load<TextAsset>("config");
-            if (configFile != null)
+            TextAsset cfg = Resources.Load<TextAsset>("config");
+            if (cfg != null)
             {
-                // 다양한 줄바꿈(\r\n, \n, \r) 모두 처리
-                string[] lines = configFile.text.Split(new[] { "\r\n", "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries);
-                foreach (string line in lines)
+                foreach (var line in cfg.text.Split(new[] { "\r\n", "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries))
                 {
-                    var trimmedLine = line.Trim();
-                    if (trimmedLine.StartsWith("OPENAI_API_KEY="))
-                    {
-                        return trimmedLine.Substring("OPENAI_API_KEY=".Length).Trim();
-                    }
+                    var t = line.Trim();
+                    if (t.StartsWith("OPENAI_API_KEY="))
+                        return t.Substring("OPENAI_API_KEY=".Length).Trim();
                 }
             }
         }
-        catch (Exception e)
-        {
-            Debug.LogError($"Resources 설정 파일 로드 실패: {e.Message}");
-        }
-
+        catch (Exception e) { Debug.LogError($"config 로드 실패: {e.Message}"); }
         return "";
     }
 
@@ -93,143 +54,163 @@ public class ChatGPTClient : MonoBehaviour
         StartCoroutine(RequestQuizQuestions(count, topic));
     }
 
-    private IEnumerator RequestQuizQuestions(int count, string topic)
+    IEnumerator RequestQuizQuestions(int count, string topic)
     {
-        string prompt = $"다음 조건에 맞는 창의적이고 재미있는 객관식 퀴즈 문제를 {count}개 생성해주세요:\n" +
-                       $"주제: {topic}\n" +
-                       "조건:\n" +
-                       "- 문제와 보기는 20자 이내로 짧게 작성할 것!\n" +
-                       "- 문제 앞에 'Q. '을 항상 붙일 것!\n" +
-                       "- 질문은 말이 되는 문장이여야 할 것!\n" +
-                       "- 이미 나왔던 문제는 그 문제를 맞혔을 시 다시 내지 말 것!\n" +
-                       "- 각 문제는 4개의 선택지를 가져야 할 것!\n" +
-                       "- 문제는 전부 상식 퀴즈여야 할 것!\n" +
-                       "- 문제를 너가 창작하여 지어내지 말 것!\n" +
-                       "- 제발 멍청한 문제 좀 내지 말 것!\n" +
-                       "- 문제 안에 답을 넣지 말 것!\n" +
-                       "- '예술', '문학' 장르의 문제를 모두 삭제할 것!\n" +
-                       "- 중복 정답을 보기에 넣지 말 것!\n" +
-                       "- 폰트가 오류나는 문제를 내지 말 것!\n" +
-                       "- 폰트가 오류나는 보기를 내지 말 것!\n" +
-                       "- 이 모든 조건들은 절대적이며 반드시 이행할 것!\n" +
-                       "- 정답은 0~3 사이의 인덱스로 표시해주세요\n" +
-                       "- 응답은 반드시 다음 JSON 형식으로만 제공해주세요:\n" +
-                       "{\n" +
-                       "  \"questions\": [\n" +
-                       "    {\n" +
-                       "      \"question\": \"문제 내용\",\n" +
-                       "      \"answers\": [\"선택지1\", \"선택지2\", \"선택지3\", \"선택지4\"],\n" +
-                       "      \"question\": \"문제 내용\",\n" +
-                       "      \"correctAnswerIndex\": 0\n" +
-                       "    }\n" +
-                       "  ]\n" +
-                       "}";
+        string prompt =
+$@"다음 조건에 맞는 객관식 퀴즈를 {count}개 생성:
+주제: {topic}
+조건:
+- 문제와 보기는 20자 이내
+- 문제 앞에 'Q. ' 접두사
+- 4지선다, 중복 보기/정답 금지
+- 상식 퀴즈만, '예술'·'문학' 제외
+- 문제 내에 정답 노출 금지
+- 정답은 0~3 인덱스
+- 응답은 아래 JSON만:
+{{
+  ""questions"": [
+    {{
+      ""question"": ""문제 내용"",
+      ""answers"": [""선택지1"", ""선택지2"", ""선택지3"", ""선택지4""],
+      ""correctAnswerIndex"": 0
+    }}
+  ]
+}}";
 
-        Debug.Log("Prompt to ChatGPT:\n" + prompt);
+        var req = new ChatGPTRequest { messages = new[] { new Message { role = "user", content = prompt } } };
+        var json = JsonUtility.ToJson(req);
 
-        ChatGPTRequest request = new ChatGPTRequest
+        using (var www = new UnityWebRequest(API_URL, "POST"))
         {
-            messages = new Message[]
+            www.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(json));
+            www.downloadHandler = new DownloadHandlerBuffer();
+            www.SetRequestHeader("Content-Type", "application/json");
+            www.SetRequestHeader("Authorization", $"Bearer {apiKey}");
+
+            yield return www.SendWebRequest();
+
+            bool ok = false;
+            try
             {
-                new Message { role = "user", content = prompt }
-            }
-        };
-
-        string jsonRequest = JsonUtility.ToJson(request);
-        Debug.Log("Request JSON:\n" + jsonRequest);
-
-        using (UnityWebRequest webRequest = new UnityWebRequest(API_URL, "POST"))
-        {
-            byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonRequest);
-            webRequest.uploadHandler = new UploadHandlerRaw(bodyRaw);
-            webRequest.downloadHandler = new DownloadHandlerBuffer();
-            webRequest.SetRequestHeader("Content-Type", "application/json");
-            webRequest.SetRequestHeader("Authorization", $"Bearer {apiKey}");
-
-            yield return webRequest.SendWebRequest();
-
-            if (webRequest.result == UnityWebRequest.Result.Success)
-            {
-                try
+                if (www.result == UnityWebRequest.Result.Success)
                 {
-                    Debug.Log("Raw response from ChatGPT:\n" + webRequest.downloadHandler.text);
-                    ChatGPTResponse response = JsonUtility.FromJson<ChatGPTResponse>(webRequest.downloadHandler.text);
+                    string raw = www.downloadHandler.text;
+                    var res = SafeFromJson<ChatGPTResponse>(raw);
 
-                    if (response == null || response.choices == null || response.choices.Length == 0)
-                    {
-                        Debug.LogError("Invalid response structure from ChatGPT API");
-                        yield break;
-                    }
+                    string content = null;
+                    if (res?.choices != null && res.choices.Length > 0)
+                        content = res.choices[0]?.message?.content;
 
-                    if (response.choices[0].message == null)
-                    {
-                        Debug.LogError("Message content is null in ChatGPT response");
-                        yield break;
-                    }
+                    if (string.IsNullOrWhiteSpace(content))
+                        content = ExtractContentFromRawResponse(raw);
 
-                    string jsonContent = response.choices[0].message.content;
+                    if (string.IsNullOrWhiteSpace(content))
+                        throw new Exception("content 없음");
 
-                    if (string.IsNullOrEmpty(jsonContent))
-                    {
-                        Debug.LogError("Content is empty. Finish reason: " + response.choices[0].message);
-                        Debug.LogError("Consider increasing max_completion_tokens");
-                        yield break;
-                    }
+                    content = TrimCodeFence(content);
 
-                    Debug.Log("Response from ChatGPT:\n" + jsonContent);
-                    // JSON 문자열에서 불필요한 부분 제거
-                    jsonContent = jsonContent.Trim();
-                    if (jsonContent.StartsWith("```json"))
-                    {
-                        jsonContent = jsonContent.Substring(7);
-                    }
-                    if (jsonContent.EndsWith("```"))
-                    {
-                        jsonContent = jsonContent.Substring(0, jsonContent.Length - 3);
-                    }
-                    jsonContent = jsonContent.Trim();
+                    var qd = SafeFromJson<QuizData>(content);
+                    if (qd == null || qd.questions == null || qd.questions.Length == 0)
+                        throw new Exception("QuizData 파싱 실패");
 
-                    QuizData quizData = JsonUtility.FromJson<QuizData>(jsonContent);
-                    List<QuestionSO> generatedQuestions = CreateQuestionSOs(quizData.questions);
-
-                    quizGenerateHandler?.Invoke(generatedQuestions);
+                    var list = CreateQuestionSOs(qd.questions);
+                    quizGenerateHandler?.Invoke(list);
+                    ok = true;
                 }
-                catch (Exception e)
+                else
                 {
-                    Debug.LogError($"응답 파싱 오류: {e.Message}");
-                    Debug.LogError($"응답 내용: {webRequest.downloadHandler.text}");
+                    Debug.LogError($"ChatGPT 요청 실패: {www.error} code={www.responseCode}");
                 }
             }
-            else
+            catch (Exception e)
             {
-                Debug.LogError($"ChatGPT API 요청 실패: {webRequest.error}");
-                Debug.LogError($"응답 코드: {webRequest.responseCode}");
-                Debug.LogError($"응답 내용: {webRequest.downloadHandler.text}");
+                Debug.LogError($"응답 파싱 오류: {e.Message}");
+                Debug.LogError($"raw: {www.downloadHandler.text}");
+            }
+            finally
+            {
+                quizRequestFinished?.Invoke(ok);
             }
         }
     }
 
-    private List<QuestionSO> CreateQuestionSOs(QuizQuestion[] quizQuestions)
+    static T SafeFromJson<T>(string s) where T : class
     {
-        List<QuestionSO> questionSOs = new List<QuestionSO>();
+        try { return JsonUtility.FromJson<T>(s); } catch { return null; }
+    }
 
-        foreach (QuizQuestion quizQ in quizQuestions)
+    static string TrimCodeFence(string s)
+    {
+        var t = s.Trim();
+        if (t.StartsWith("```json")) t = t.Substring(7);
+        if (t.EndsWith("```")) t = t.Substring(0, t.Length - 3);
+        return t.Trim();
+    }
+
+    string ExtractContentFromRawResponse(string raw)
+    {
+        if (string.IsNullOrEmpty(raw)) return null;
+        int idx = raw.IndexOf("\"content\"");
+        if (idx < 0) return null;
+        int colon = raw.IndexOf(':', idx);
+        if (colon < 0) return null;
+        int startQuote = raw.IndexOf('"', colon + 1);
+        if (startQuote < 0) return null;
+        startQuote++;
+
+        var sb = new StringBuilder();
+        bool esc = false;
+        for (int i = startQuote; i < raw.Length; i++)
         {
-            QuestionSO questionSO = ScriptableObject.CreateInstance<QuestionSO>();
-
-            // Reflection을 사용하여 private 필드에 값 설정
-            var questionField = typeof(QuestionSO).GetField("question", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            var answersField = typeof(QuestionSO).GetField("answers", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            var correctAnswerIndexField = typeof(QuestionSO).GetField("correctAnswerIndex", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-
-            questionField?.SetValue(questionSO, quizQ.question);
-            answersField?.SetValue(questionSO, quizQ.answers);
-            correctAnswerIndexField?.SetValue(questionSO, quizQ.correctAnswerIndex);
-
-            questionSOs.Add(questionSO);
+            char c = raw[i];
+            if (esc)
+            {
+                switch (c)
+                {
+                    case '"': sb.Append('"'); break;
+                    case '\\': sb.Append('\\'); break;
+                    case '/': sb.Append('/'); break;
+                    case 'b': sb.Append('\b'); break;
+                    case 'f': sb.Append('\f'); break;
+                    case 'n': sb.Append('\n'); break;
+                    case 'r': sb.Append('\r'); break;
+                    case 't': sb.Append('\t'); break;
+                    case 'u':
+                        if (i + 4 < raw.Length)
+                        {
+                            string hex = raw.Substring(i + 1, 4);
+                            if (int.TryParse(hex, System.Globalization.NumberStyles.HexNumber, null, out int code))
+                            { sb.Append((char)code); i += 4; }
+                        }
+                        break;
+                    default: sb.Append(c); break;
+                }
+                esc = false; continue;
+            }
+            if (c == '\\') { esc = true; continue; }
+            if (c == '"') return sb.ToString();
+            sb.Append(c);
         }
+        return null;
+    }
 
-        return questionSOs;
+    List<QuestionSO> CreateQuestionSOs(QuizQuestion[] src)
+    {
+        var list = new List<QuestionSO>();
+        foreach (var q in src)
+        {
+            var so = ScriptableObject.CreateInstance<QuestionSO>();
+            so.hideFlags = HideFlags.None;
+
+            var answers = q.answers != null && q.answers.Length == 4
+                ? q.answers
+                : new[] { "보기1", "보기2", "보기3", "보기4" };
+
+            int idx = Mathf.Clamp(q.correctAnswerIndex, 0, 3);
+            so.SetData(q.question ?? "Q. 빈 문제", answers, idx);
+            list.Add(so);
+        }
+        return list;
     }
 
     public void SetApiKey(string key)
