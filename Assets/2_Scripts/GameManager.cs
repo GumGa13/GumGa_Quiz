@@ -189,7 +189,7 @@ public class GameManager : MonoBehaviour
 
         if (LoadingCanvas == null)
         {
-            var tagged = GameObject.FindGameObjectsWithTag("LoadingCanvas").FirstOrDefault();
+            var tagged = GameObject.FindGameObjectsWithTag("    ").FirstOrDefault();
             if (tagged != null) LoadingCanvas = tagged;
 
             if (LoadingCanvas == null)
