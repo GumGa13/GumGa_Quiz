@@ -75,13 +75,13 @@ public class Quiz : MonoBehaviour
 
         if (timer == null)
         {
-            timer = FindObjectOfType<Timer>();
+            timer = FindFirstObjectByType<Timer>();
             if (timer == null) Debug.LogError("Quiz: Timer를 찾을 수 없습니다. 씬에 Timer 오브젝트가 있는지 확인하세요.");
         }
 
         if (scoreKeeper == null)
         {
-            scoreKeeper = FindObjectOfType<ScoreKeeper>();
+            scoreKeeper = FindFirstObjectByType<ScoreKeeper>();
             if (scoreKeeper == null) Debug.LogError("Quiz: ScoreKeeper를 찾을 수 없습니다. 씬에 ScoreKeeper 오브젝트가 있는지 확인하세요.");
         }
 
@@ -91,7 +91,7 @@ public class Quiz : MonoBehaviour
     void BindClients()
     {
         if (chatGPTClient == null)
-            chatGPTClient = FindObjectOfType<ChatGPTClient>();
+            chatGPTClient = FindFirstObjectByType<ChatGPTClient>();
 
         if (chatGPTClient != null)
         {
@@ -114,7 +114,6 @@ public class Quiz : MonoBehaviour
 
     public void RestartRound()
     {
-        // 상태 초기화
         StopAllCoroutines();
         isGeneratingQuestions = false;
         questionsReady = false;
@@ -154,7 +153,6 @@ public class Quiz : MonoBehaviour
             questionCount = pendingNeeded;
             chatGPTClient.GenerateQuizQuestions(questionCount, lastRequestedTopic);
             Debug.Log($"GenerateQuestionsifNeeded: 요청 {questionCount}개, 주제: {lastRequestedTopic}");
-            // chatGPTClient will invoke quizRequestFinished eventually
         }
         else
         {
@@ -178,7 +176,6 @@ public class Quiz : MonoBehaviour
 
     void QuizRequestFinished(bool success)
     {
-        // chatGPT 요청 완료 콜백 (성공 여부)
         if (!success)
         {
             Debug.LogWarning("QuizRequestFinished: 문제 생성 실패. 폴백으로 채웁니다.");
@@ -191,25 +188,22 @@ public class Quiz : MonoBehaviour
             InitializeProgressBar();
             GetNextQuestion();
         }
-        // 성공 시 실제 문제는 QuizGeneratedHandler에서 처리됨
     }
 
     void QuizGeneratedHandler(List<QuestionSO> GeneratedQuestions)
     {
         Debug.Log($"QuizGeneratedHandler: 받은 문제 수 = {GeneratedQuestions?.Count ?? 0}");
-        StopAllCoroutines(); // 안전하게 타임아웃 등 중단
+        StopAllCoroutines();
         isGeneratingQuestions = false;
 
         int got = GeneratedQuestions?.Count ?? 0;
         if (got > 0)
         {
             questions.Clear();
-            // 한 판 개수만 사용
             for (int i = 0; i < Mathf.Min(questionsPerRound, GeneratedQuestions.Count); i++)
                 questions.Add(GeneratedQuestions[i]);
         }
 
-        // 부족하면 폴백 채움
         if (questions.Count < questionsPerRound)
         {
             int remain = questionsPerRound - questions.Count;
@@ -222,11 +216,7 @@ public class Quiz : MonoBehaviour
 
         if (loadingText != null) loadingText.text = "";
         if (GameManager.Instance != null) GameManager.Instance.ShowQuizScene();
-        else
-        {
-            // 폴백으로 씬에서 loading 이름 포함 오브젝트 비활성화
-            HideLoadingCanvasDirectly();
-        }
+        else HideLoadingCanvasDirectly();
 
         InitializeProgressBar();
         GetNextQuestion();
@@ -375,7 +365,6 @@ public class Quiz : MonoBehaviour
     {
         if (currentQeustion == null)
         {
-            Debug.LogWarning("OnDisplayQuestion: currentQeustion이 null입니다.");
             return;
         }
 
@@ -394,7 +383,6 @@ public class Quiz : MonoBehaviour
 
         if (timer == null || currentQeustion == null)
         {
-            Debug.LogWarning("OnAnswerButtonClicked: timer 또는 currentQeustion이 null입니다.");
             return;
         }
 
@@ -421,7 +409,8 @@ public class Quiz : MonoBehaviour
         if (answeredQuestions >= questionsPerRound) EndRound();
         else Invoke(nameof(GetNextQuestion), 0.3f);
 
-        if (scoreText != null && scoreKeeper != null) scoreText.text = $"Score : {scoreKeeper.CalculateScore()}%";
+        if (scoreText != null && scoreKeeper != null)
+            scoreText.text = $"Score : {scoreKeeper.CalculateScore()}점";
     }
 
     private void DisplaySolution(int index)

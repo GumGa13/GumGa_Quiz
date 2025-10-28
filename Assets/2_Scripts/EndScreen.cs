@@ -21,4 +21,9 @@ public class EndScreen : MonoBehaviour
             UnityEngine.SceneManagement.SceneManager.LoadScene(
                 UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
     }
+
+    public void onReply()
+    {
+        GameManager.Instance.OnReplayLevel1();
+    }
 }

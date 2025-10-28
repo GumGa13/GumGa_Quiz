@@ -1,61 +1,71 @@
 using UnityEngine;
+using TMPro;
 
 public class ScoreKeeper : MonoBehaviour
 {
-    // 누적 점수(소수 허용)
-    float totalPoints = 0f;
-    // 누적 가능한 최대 포인트
-    float maxPoints = 0f;
+    [SerializeField] private TextMeshProUGUI scoreText;
 
-    public int GetCorrectAnswers()
+    [Header("라운드 설정")]
+    [SerializeField] private int questionsPerRound = 5; // 총 문제 수
+    [SerializeField] private int maxScore = 100;        // 만점
+
+    private int currentScore = 0;
+    private int questionsSeen = 0;
+
+    void Start()
     {
-        return Mathf.FloorToInt(totalPoints);
+        UpdateScoreText();
     }
 
-    // 문제 노출 시 호출: 한 문제당 기본 단위 1
+    // 문제 본 횟수 누적
     public void IncrementQuestionsSeen()
     {
-        maxPoints += 1f;
+        questionsSeen++;
     }
 
-    public void IncrementQuestionsSeen(int dummy)
+    // 정답 시 점수 증가
+    public void IncrementCorrectAnswers(float _ = 1f)
     {
-        IncrementQuestionsSeen();
+        int perQuestion = Mathf.RoundToInt((float)maxScore / Mathf.Max(1, questionsPerRound));
+        currentScore = Mathf.Min(maxScore, currentScore + perQuestion);
+        UpdateScoreText();
     }
 
-    // 정답 시 포인트 추가 (기본 1.0f, 보너스 포함)
-    public void IncrementCorrectAnswers(float points = 1f)
-    {
-        totalPoints += points;
-    }
-
-    // 기존 호출 호환성용 오버로드
+    // 파라미터 없는 오버로드 유지
     public void IncrementCorrectAnswers()
     {
         IncrementCorrectAnswers(1f);
     }
 
-    public int GetQuestionsSeen()
-    {
-        return Mathf.FloorToInt(maxPoints);
-    }
-
+    // 현재 점수(0~100)
     public int CalculateScore()
     {
-        if (maxPoints <= 0f) return 0;
-        return Mathf.RoundToInt((totalPoints / maxPoints) * 100f);
+        return Mathf.Clamp(currentScore, 0, maxScore);
     }
 
-    // 재시작 / 씬 로드 시 상태 초기화용 (GameManager에서 호출)
+    // 점수 초기화
     public void ResetScore()
     {
-        totalPoints = 0f;
-        maxPoints = 0f;
+        currentScore = 0;
+        questionsSeen = 0;
+        UpdateScoreText();
     }
 
-    // 디버그용: 내부 상태 확인
+    private void UpdateScoreText()
+    {
+        if (scoreText != null)
+            scoreText.text = $"Score: {CalculateScore()}점";
+    }
+
+    // 외부에서 총 문제 수 지정 가능
+    public void SetQuestionsPerRound(int count)
+    {
+        questionsPerRound = Mathf.Max(1, count);
+        UpdateScoreText();
+    }
+
     public void DebugLogState()
     {
-        Debug.Log($"ScoreKeeper - totalPoints: {totalPoints}, maxPoints: {maxPoints}, percent: {CalculateScore()}%");
+        Debug.Log($"ScoreKeeper - currentScore: {currentScore}, questionsSeen: {questionsSeen}, score: {CalculateScore()}점");
     }
 }
